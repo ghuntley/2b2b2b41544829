@@ -42,7 +42,8 @@ RUN echo "set -o vi" >> /home/gitpod/.bashrc
 # Install cachix
 RUN . /home/gitpod/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA cachix -f https://cachix.org/api/v1/install \
-  && cachix use cachix
+  && cachix use cachix \
+  && cachix use ghuntley
 
 # Install git
 RUN . /home/gitpod/.nix-profile/etc/profile.d/nix.sh \
