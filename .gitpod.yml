@@ -2,7 +2,9 @@ image:
   file: Dockerfile
 tasks:
   - init: >
+      direnv allow
       nix-shell
+
 github:
   prebuilds:
     master: true
