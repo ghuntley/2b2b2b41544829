@@ -2,8 +2,7 @@ let
   sources = import ./nix/sources.nix;
   pkgs = import sources.nixpkgs { };
   inherit (pkgs.lib) optional optionals;
-in
-  with pkgs;
+in with pkgs;
 
 mkShell {
 
@@ -13,9 +12,9 @@ mkShell {
     cachix
     curl
     htop
-    lorri
     moreutils
     niv
+    nixpkgs-fmt
     pre-commit
     tmate
     tmux
@@ -28,13 +27,6 @@ mkShell {
   NIX_ENFORCE_PURITY = true;
 
   shellHook = ''
-    export LANG='en_US.UTF-8';
-    export LANGUAGE='en_US:en';
-    export LC_ALL='en_US.UTF-8';
-
-    cachix use cachix
-
-    pre-commit install
-    pre-commit autoupdate
+    ${(import ./default.nix).pre-commit-check.shellHook}
   '';
 }

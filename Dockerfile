@@ -1,23 +1,59 @@
-FROM ubuntu:focal
+FROM gitpod/workspace-base
 
-RUN echo 'debconf debconf/frontend select Noninteractive' | debconf-set-selections
+USER root
+
+# QEMU
 RUN apt-get update \
-      && apt-get install --no-install-recommends -y ca-certificates curl direnv docker git linux-image-$(uname -r) libguestfs-tools locales xz-utils qemu qemu-system-x86 vim zsh \
-      && apt-get clean && rm -rf /var/lib/apt/lists/* \
-      && mkdir -m 0755 /nix && groupadd -r nixbld && chown root /nix \
-      && for n in $(seq 1 10); do useradd -c "Nix build user $n" -d /var/empty -g nixbld -G nixbld -M -N -r -s "$(command -v nologin)" "nixbld$n"; done
-SHELL ["/bin/bash", "-o", "pipefail", "-c"]
+  && apt-get install --no-install-recommends -y linux-image-$(uname -r) libguestfs-tools qemu qemu-system-x86
 
-RUN set -o pipefail && curl -L https://nixos.org/nix/install | bash
-RUN echo ". $HOME/.nix-profile/etc/profile.d/nix.sh" >> ~/.zshrc
+# Docker
+RUN apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release \
+  && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+  && echo \
+            "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
+            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null \
+  && apt-get update \
+  && apt-get install -y docker-ce docker-ce-cli containerd.io
 
-ENV LANG='en_US.UTF-8' LANGUAGE='en_US:en' LC_ALL='en_US.UTF-8'
-RUN locale-gen en_US.UTF-8
-RUN dpkg-reconfigure locales
+# Cleanup
+RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 
-ENV USER=root
+# Install Nix
+RUN addgroup --system nixbld \
+  && adduser gitpod nixbld \
+  && for i in $(seq 1 30); do useradd -ms /bin/bash nixbld$i &&  adduser nixbld$i nixbld; done \
+  && mkdir -m 0755 /nix \
+  && chown gitpod /nix \
+  && mkdir -p /etc/nix \
+  && echo 'sandbox = false' > /etc/nix/nix.conf
+  
+# Install Nix
+CMD /bin/bash -l
+USER gitpod
+ENV USER gitpod
+WORKDIR /home/gitpod
 
-RUN chsh -s `which zsh`
-RUN direnv hook zsh >> ~/.zshrc
+RUN curl https://nixos.org/releases/nix/nix-2.3.14/install | sh
+RUN echo '. /home/gitpod/.nix-profile/etc/profile.d/nix.sh' >> /home/gitpod/.bashrc
+RUN mkdir -p /home/gitpod/.config/nixpkgs && echo '{ allowUnfree = true; }' >> /home/gitpod/.config/nixpkgs/config.nix
 
-RUN echo "PROMPT='%(?.%F{green}√.%F{red}?%?)%f %B%F{240}%1~%f%b %# '" >> ~/.zshrc
+RUN echo "set -o vi" >> /home/gitpod/.bashrc
+
+# Install cachix
+RUN . /home/gitpod/.nix-profile/etc/profile.d/nix.sh \
+  && nix-env -iA cachix -f https://cachix.org/api/v1/install \
+  && cachix use cachix
+
+# Install git
+RUN . /home/gitpod/.nix-profile/etc/profile.d/nix.sh \
+  && nix-env -i git git-lfs
+
+# Install direnv
+RUN . /home/gitpod/.nix-profile/etc/profile.d/nix.sh \
+  && nix-env -i direnv \
+  && direnv hook bash >> /home/gitpod/.bashrc
+
+
+
+
+
