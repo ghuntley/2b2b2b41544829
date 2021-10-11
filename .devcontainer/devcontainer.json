@@ -1,0 +1,12 @@
+{
+    "name": "",
+    "build": {
+      "dockerfile": "../Dockerfile",
+    },
+	"postCreateCommand": "direnv allow",
+	"extensions": [
+		"bbenoist.nix",
+		"ms-azuretools.vscode-docker",
+		"rust-lang.rust"
+	],
+}
