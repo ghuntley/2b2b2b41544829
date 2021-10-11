@@ -12,27 +12,27 @@
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "nixpkgs": {
-        "branch": "release-20.03",
+        "branch": "master",
         "description": "Nix Packages collection",
         "homepage": "",
         "owner": "NixOS",
         "repo": "nixpkgs",
-        "rev": "eb73405ecceb1dc505b7cbbd234f8f94165e2696",
-        "sha256": "06k21wbyhhvq2f1xczszh3c2934p0m02by3l2ixvd6nkwrqklax7",
+        "rev": "e4ef597edfd8a0ba5f12362932fc9b1dd01a0aef",
+        "sha256": "1w6y7ma2crcsfph60z8j1k3af0v2m110cbjrb62z287mn4skhqjs",
         "type": "tarball",
-        "url": "https://github.com/NixOS/nixpkgs/archive/eb73405ecceb1dc505b7cbbd234f8f94165e2696.tar.gz",
+        "url": "https://github.com/NixOS/nixpkgs/archive/e4ef597edfd8a0ba5f12362932fc9b1dd01a0aef.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     },
     "pre-commit-hooks-nix": {
-        "branch": "master",
+        "branch": "ghuntley-patch-1",
         "description": "Seamless integration of https://pre-commit.com git hooks with Nix.",
         "homepage": "",
-        "owner": "cachix",
+        "owner": "ghuntley",
         "repo": "pre-commit-hooks.nix",
-        "rev": "475b1f7f7ddcb6415e6624a68c4fe90f55ee9e73",
-        "sha256": "052x30cf793kq1gsp5wpcvvsx1hbs9rkgx2z7760c5vrsi39l7y3",
+        "rev": "ba1747ba9074c8ad839abfececd2839b3c45ff80",
+        "sha256": "1k06rsq2znb6202q5xzgqfcwp822kbrz9yx7sb33c8dx6ck99y8n",
         "type": "tarball",
-        "url": "https://github.com/cachix/pre-commit-hooks.nix/archive/475b1f7f7ddcb6415e6624a68c4fe90f55ee9e73.tar.gz",
+        "url": "https://github.com/ghuntley/pre-commit-hooks.nix/archive/ba1747ba9074c8ad839abfececd2839b3c45ff80.tar.gz",
         "url_template": "https://github.com/<owner>/<repo>/archive/<rev>.tar.gz"
     }
 }

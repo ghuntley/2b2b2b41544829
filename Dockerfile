@@ -41,6 +41,11 @@ RUN mkdir -p /home/gitpod/.config/nixpkgs && echo '{ allowUnfree = true; }' >> /
 
 RUN echo "set -o vi" >> /home/gitpod/.bashrc
 
+# Use unstable
+RUN . /home/gitpod/.nix-profile/etc/profile.d/nix.sh \
+  && nix-channel --add https://nixos.org/channels/nixpkgs-unstable nixpkgs \
+  && nix-channel --upgrade nixpkgs
+
 # Install cachix
 RUN . /home/gitpod/.nix-profile/etc/profile.d/nix.sh \
   && nix-env -iA cachix -f https://cachix.org/api/v1/install \

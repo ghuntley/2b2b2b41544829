@@ -11,6 +11,7 @@ in with pkgs; {
     # default_stages = ["manual" "push"];
     hooks = {
       clippy.enable = true;
+      hadolint.enable = true;
       nix-linter.enable = false;
       nixfmt.enable = true;
       rustfmt.enable = true;
