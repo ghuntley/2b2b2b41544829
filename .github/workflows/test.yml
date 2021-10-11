@@ -15,4 +15,5 @@ jobs:
         name: ghuntley
         authToken: '${{ secrets.CACHIX_AUTH_TOKEN }}'
     - run: nix-build
+    - run: cd machines && nix-build
     - run: nix-shell --run "echo OK"
