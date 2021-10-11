@@ -13,6 +13,7 @@ mkShell {
     cachix
     curl
     htop
+    lorri
     moreutils
     niv
     pre-commit
@@ -34,6 +35,6 @@ mkShell {
     cachix use cachix
 
     pre-commit install
-    pre-commit autoupdategit
+    pre-commit autoupdate
   '';
 }
