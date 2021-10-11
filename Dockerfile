@@ -1,19 +1,21 @@
 FROM gitpod/workspace-base
+SHELL ["/bin/bash", "-o", "pipefail", "-c"]
 
 USER root
-
 # QEMU
 RUN apt-get update \
-  && apt-get install --no-install-recommends -y linux-image-$(uname -r) libguestfs-tools qemu qemu-system-x86
+  && apt-get install --no-install-recommends -y "linux-image-$(uname -r)" libguestfs-tools qemu qemu-system-x86 \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Docker
-RUN apt-get install -y apt-transport-https ca-certificates curl gnupg lsb-release \
-  && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
+RUN apt-get install --no-install-recommends -y apt-transport-https ca-certificates curl gnupg lsb-release \
+  && curl -fsSL https://download.docker.com/linux/ubuntu/gpg | gpg --dearmor -o /usr/share/keyrings/docker-archive-keyring.gpg \
   && echo \
             "deb [arch=$(dpkg --print-architecture) signed-by=/usr/share/keyrings/docker-archive-keyring.gpg] https://download.docker.com/linux/ubuntu \
-            $(lsb_release -cs) stable" | sudo tee /etc/apt/sources.list.d/docker.list > /dev/null \
+            $(lsb_release -cs) stable" | tee /etc/apt/sources.list.d/docker.list > /dev/null \
   && apt-get update \
-  && apt-get install -y docker-ce docker-ce-cli containerd.io
+  && apt-get install --no-install-recommends -y docker-ce docker-ce-cli containerd.io \
+  && apt-get clean && rm -rf /var/lib/apt/lists/*
 
 # Cleanup
 RUN apt-get clean && rm -rf /var/lib/apt/lists/*
@@ -21,7 +23,7 @@ RUN apt-get clean && rm -rf /var/lib/apt/lists/*
 # Install Nix
 RUN addgroup --system nixbld \
   && adduser gitpod nixbld \
-  && for i in $(seq 1 30); do useradd -ms /bin/bash nixbld$i &&  adduser nixbld$i nixbld; done \
+  && for i in $(seq 1 30); do useradd -ms /bin/bash "nixbld$i" &&  adduser "nixbld$i" nixbld; done \
   && mkdir -m 0755 /nix \
   && chown gitpod /nix \
   && mkdir -p /etc/nix \
